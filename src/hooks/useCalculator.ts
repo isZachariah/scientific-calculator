@@ -1,12 +1,13 @@
-import React, {ReactElement, useReducer, useState} from "react";
-import {parse, resolve, Token} from "./useParser";
+import React, {useEffect, useReducer, useState} from "react";
+import {useParser} from "./useParser";
 
 
 type State = {
     overwrite: boolean
     current: string
     answer: string
-    history: string[]
+    expr: string
+    addToHistory: string
 }
 
 type Action = {
@@ -127,39 +128,87 @@ const reducer = (state: State, {type, payload}: Action) => {
             return {}
         case 'evaluate':
             if (state.current === null || '' || undefined) return state
-            console.log(state.current)
-            // state.answer = useParser(state.current)
-            state.history.unshift(`${state.current} = ${state.answer}`)
+            let answer = useParser(state.current)
             return {
                 ...state,
-                current: state.answer,
-                overwrite: true,
+                current: answer,
+                addToHistory: `${state.current} = ${answer}`,
+                // overwrite: true,
             }
 
     }
 }
 
+const initHistory: string[] = []
 
-// const initQueue: Token[] = []
 export const useCalculator = () => {
-    const [state, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, { current: '', history: [] })
-    // const [queue, setQueue] = useState(initQueue)
+    const [{current, addToHistory}, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, { current: '', addToHistory: '' })
+    const [history, setHistory] = useState(initHistory)
+    const [display, setDisplay] = useState('')
 
-    // const useParser = (expr: string) => {
-    //     // const [queue, setQueue] = useState(initQueue)
-    //     parse(expr, queue, setQueue)
-    //     return resolve(queue)
-    // }
+    useEffect(() => {
+        setHistory([...history, addToHistory])
+    }, [addToHistory])
 
-    const {
-        current,
-        history,
-    } = state
+    useEffect(() => {
+        setDisplay(current)
+    }, [current])
 
 
     return {
         dispatch,
-        current,
+        display,
         history,
     }
 }
+
+
+
+
+// const generateOperator= (operation: string,
+//                          binaryFunction: ((x: number, y: number) => number),
+//                          left: boolean,
+//                          precedence: number,
+// ) => ({
+//     operation,
+//     binaryFunction,
+//     left,
+//     precedence
+// });
+//
+// const OPERATORS = {
+//     '+': generateOperator('+', ((x, y) => x + y), true, 2),
+//     '−': generateOperator('−', ((x, y) => x - y), true, 2),
+//     '×': generateOperator('*', ((x, y) => x * y), true, 3),
+//     '÷': generateOperator('/', ((x, y) => x / y), true, 3),
+//     'mod': generateOperator('mod', ((x, y) => x % y), true, 3),
+//     '^': generateOperator('^', ((x, y) => Math.pow(y, x)), false, 1),
+// }
+//
+// function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
+//     return o[propertyName]; // o[propertyName] is of type T[K]
+// }
+//
+// type opNode =  {
+//     operation: string
+//     binaryFunction: ((x: number, y: number) => number)
+//     left: boolean
+//     precedence: number
+// }
+//
+// function getPrecedence(element: opNode) {
+//     return element.precedence;
+// }
+//
+//
+// const greaterPrecedence = (on_stack: opNode, new_el: opNode) => {
+//     return getPrecedence(on_stack) > getPrecedence(new_el);
+// }
+//
+// const equalPrecedence = (on_stack: opNode, new_el: opNode) => {
+//     return getPrecedence(on_stack) === getPrecedence(new_el) && association(on_stack);
+// }
+//
+// function association(element: opNode) {
+//     return element.left
+// }

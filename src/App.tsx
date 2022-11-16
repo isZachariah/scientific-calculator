@@ -1,16 +1,14 @@
 import {ToggleSwitch} from "./components/ToggleSwitch";
 import './App.css';
 import {Calculator} from "./components/Calculator";
-import {useReducer} from "react";
 import {useCalculator} from "./hooks/useCalculator";
-import {Display} from "./components/Display";
 import {Tape} from "./components/Tape";
 
 
 
 
 function App() {
-  const { dispatch, current, history } = useCalculator()
+  const { dispatch, display, history } = useCalculator()
 
   return (
     <div className={'w-screen h-screen max-w-full max-h-full dark:bg-zinc-400'}>
@@ -25,7 +23,7 @@ function App() {
         </header>
       </div>
       <div className={'m-auto p-12 flex flex-row'}>
-          <Calculator dispatch={dispatch} current={current} />
+          <Calculator dispatch={dispatch} current={display} />
           <Tape history={history} />
       </div>
     </div>
