@@ -5,8 +5,6 @@ import {useParser} from "./useParser";
 type State = {
     overwrite: boolean
     current: string
-    answer: string
-    expr: string
     addToHistory: string
 }
 
@@ -72,6 +70,12 @@ const reducer = (state: State, {type, payload}: Action) => {
                 ...state,
                 current: state.current.slice(0, -1)
             }
+        case 'clear':
+            return {
+                ...state,
+                current: null,
+                addToHistory: null
+            }
         case 'choose-operator':
             if (state.current === null) return state
             if (['+','-','×','÷','^'].includes(state.current.slice(-1))) {
@@ -128,7 +132,8 @@ const reducer = (state: State, {type, payload}: Action) => {
             return {}
         case 'evaluate':
             if (state.current === null || '' || undefined) return state
-            let answer = useParser(state.current)
+            let expr = state.current.slice()
+            let answer = useParser(expr)
             return {
                 ...state,
                 current: answer,
@@ -139,6 +144,34 @@ const reducer = (state: State, {type, payload}: Action) => {
     }
 }
 
+const unaryFunctions = [
+    { 'sin':   (x: number) => Math.sin(x)   },
+    { 'cos':   (x: number) => Math.cos(x)   },
+    { 'tan':   (x: number) => Math.tan(x)   },
+    { 'asin':  (x: number) => Math.asin(x)  },
+    { 'acos':  (x: number) => Math.acos(x)  },
+    { 'atan':  (x: number) => Math.atan(x)  },
+    { 'log':   (x: number) => Math.log(x)   },
+    { 'log10': (x: number) => Math.log10(x) },
+    { 'sqrt':  (x: number) => Math.sqrt(x)  },
+    { 'abs':   (x: number) => Math.abs(x)   },
+    { 'round': (x: number) => Math.round(x) },
+    { 'floor': (x: number) => Math.floor(x) },
+    { 'ceil':  (x: number) => Math.ceil(x)  },
+]
+
+const constants = [
+    { 'pi':      Math.PI             },
+    { 'ln10':    Math.LN10           },
+    { 'ln2':     Math.LN2            },
+    { 'log2e':   Math.LOG2E          },
+    { 'log10e':  Math.LOG10E         },
+    { 'sqrt1_2': Math.SQRT1_2        },
+    { 'sqrt2':   Math.SQRT2          },
+    { 'e':       Math.E              },
+    { 'random':  () => Math.random() },
+]
+
 const initHistory: string[] = []
 
 export const useCalculator = () => {
@@ -147,11 +180,17 @@ export const useCalculator = () => {
     const [display, setDisplay] = useState('')
 
     useEffect(() => {
+        if (addToHistory === null) {
+            setHistory(initHistory)
+            return () => setHistory(initHistory)
+        }
         setHistory([...history, addToHistory])
+        return () => setHistory([...history, addToHistory])
     }, [addToHistory])
 
     useEffect(() => {
         setDisplay(current)
+        return () => setDisplay(current)
     }, [current])
 
 
@@ -161,54 +200,3 @@ export const useCalculator = () => {
         history,
     }
 }
-
-
-
-
-// const generateOperator= (operation: string,
-//                          binaryFunction: ((x: number, y: number) => number),
-//                          left: boolean,
-//                          precedence: number,
-// ) => ({
-//     operation,
-//     binaryFunction,
-//     left,
-//     precedence
-// });
-//
-// const OPERATORS = {
-//     '+': generateOperator('+', ((x, y) => x + y), true, 2),
-//     '−': generateOperator('−', ((x, y) => x - y), true, 2),
-//     '×': generateOperator('*', ((x, y) => x * y), true, 3),
-//     '÷': generateOperator('/', ((x, y) => x / y), true, 3),
-//     'mod': generateOperator('mod', ((x, y) => x % y), true, 3),
-//     '^': generateOperator('^', ((x, y) => Math.pow(y, x)), false, 1),
-// }
-//
-// function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
-//     return o[propertyName]; // o[propertyName] is of type T[K]
-// }
-//
-// type opNode =  {
-//     operation: string
-//     binaryFunction: ((x: number, y: number) => number)
-//     left: boolean
-//     precedence: number
-// }
-//
-// function getPrecedence(element: opNode) {
-//     return element.precedence;
-// }
-//
-//
-// const greaterPrecedence = (on_stack: opNode, new_el: opNode) => {
-//     return getPrecedence(on_stack) > getPrecedence(new_el);
-// }
-//
-// const equalPrecedence = (on_stack: opNode, new_el: opNode) => {
-//     return getPrecedence(on_stack) === getPrecedence(new_el) && association(on_stack);
-// }
-//
-// function association(element: opNode) {
-//     return element.left
-// }

@@ -8,8 +8,8 @@ type DisplayProps = {
 
 export const Display: FC<DisplayProps> = ({dispatch, current}) => {
     return (
-        <div className={'w-full border-black border-2 flex flex-row max-h-56 h-12 m-3 bg-white align-middle'}>
-            <span className={'font-bold text-4xl text-white text-stroke-black text-stroke-2 w-5/6 text-end align-middle m-auto'}>{current}</span>
+        <div className={'w-full border-black border-2 flex flex-row max-h-56 min-h-20 m-3 bg-white align-middle'}>
+            <span className={'font-bold text-4xl text-white text-stroke-black text-stroke-2 w-5/6 text-end align-middle m-auto break-all'}>{current}</span>
             <Button dispatch={dispatch}
                     type={'delete'} value={'⌫'}
                     style={'font-bold text-4xl text-white text-stroke-black text-stroke-2 m-0 cursor-pointer relative right-1 align-middle m-auto'} />

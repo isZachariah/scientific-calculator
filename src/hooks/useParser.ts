@@ -1,7 +1,6 @@
 
 export const useParser = (expr: string) => {
     let queue: Token[] = []
-
     parse(expr, queue) //queue
     return  resolve(queue) //queue
 }
@@ -12,7 +11,7 @@ export const parse = (expr: string, queue: object[] ) => { //
     const stack: string[] = []
     expr.split(' ').forEach((token) => {
         if (/\d/.test(token)
-            || /^-\d+.\d+$/.test(token)
+            // || /^-\d+.\d+$/.test(token)
             || /^\d+.\d+$/.test(token)) {
             queue.push({type: 'number', value: parseFloat(token)})
         }
@@ -31,8 +30,13 @@ export const parse = (expr: string, queue: object[] ) => { //
             if (stack.length !== 0) {
                 let curr = getProperty(OPERATORS, token)
                 let prev = getProperty(OPERATORS, last(stack))
+                // while (prev.precedence > curr.precedence || prev.precedence === curr.precedence && prev.left) {
+                //     queue.push({ type: 'operation', value: stack.pop() })
+                //     if (stack.length === 0) break;
+                // }
+
                 while (greaterPrecedence(prev, curr) || equalPrecedence(prev, curr)) {
-                    queue.push({ type: 'operation', value: last(stack) })
+                    queue.push({ type: 'operation', value: stack.pop() })
                     if (stack.length === 0) break;
                 }
             }
@@ -68,8 +72,8 @@ export const resolve = (tokens: Token[]) => {
                 if (typeof element.value === 'number') stack.push(element.value);
                 break;
             case 'operation':
-                let a = stack.pop();
-                let b = stack.pop();
+                let b: number = stack.pop();
+                let a: number = stack.pop();
                 if (typeof element.value === "string") {
                     const operator = getProperty(OPERATORS, element.value)
                     result = operator.binaryFunction(a, b);

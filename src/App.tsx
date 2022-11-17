@@ -22,7 +22,7 @@ function App() {
             </div>
         </header>
       </div>
-      <div className={'m-auto p-12 flex flex-row'}>
+      <div className={'m-auto px-56 flex flex-row justify-center align-middle'}>
           <Calculator dispatch={dispatch} current={display} />
           <Tape history={history} />
       </div>
