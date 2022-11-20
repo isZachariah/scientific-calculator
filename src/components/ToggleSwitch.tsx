@@ -22,7 +22,7 @@ export const ToggleSwitch = () => {
             />
             <span
                 className={`w-16 h-7 flex items-center flex-shrink-0 ml-4 p-1 bg-slate-300 rounded-full
-                    duration-300 ease-in-out peer-checked:bg-slate-900 after:w-8 after:h-8 after:bg-white after:border-black after:border-2
+                    duration-300 ease-in-out peer-checked:bg-[#ff798c] after:w-8 after:h-8 after:bg-white after:border-black after:border-2
                     after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6
                     group-hover:after:translate-x-1 border-black border-2`}></span>
             </label>
