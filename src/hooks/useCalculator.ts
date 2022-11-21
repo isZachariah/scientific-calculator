@@ -115,42 +115,44 @@ const reducer = (state: State, {type, payload}: Action) => {
             console.log(state)
             if (state.overwrite) return state
             if (isDigit(state.current)) return { ...state, overwrite: true, current: '', addToHistory: `${state.current} = ${state.current}`}
-            if (!/\d/.test(state.current)) return {...state, overwrite: true, current: 'Error: No digits in expression', }
+            if (!/\d/.test(state.current)) return {...state, overwrite: true, addToHistory: `${state.current} = Error`, current: 'Error: No digits in expression', }
 
-            let expr = state.current.split(' ')
-            let answer = solve(expr)
-            if (isNaN(answer)) return {...state, answer: 0, addToHistory: `${state.current} = Error`, overwrite: true }
-
-            return {
-                ...state,
-                answer: answer,
-                current: '',
-                addToHistory: `${state.current} = ${answer}`,
-                overwrite: true,
+            // More often than not the program will still run with unbalanced parentheses but I felt like this was a good addition to avoid possible errors
+            if (/[(]/.test(state.current) || /[)]/.test(state.current)) {
+                let countLeftParentheses = state.current.split('(').length - 1
+                let countRightParentheses = state.current.split(')').length - 1
+                if (countLeftParentheses !== countRightParentheses) {
+                    return {
+                        ...state,
+                        overwrite: true,
+                        addToHistory: `${state.current} = Error`,
+                        current: 'Error: Parentheses do not match',
+                    }
+                }
+                return getAnswer(state)
             }
+
+            return getAnswer(state)
 
         default: return state
 
     }
 }
 
-/** Validate
- * Function to validate the expression has balanced parentheses
- * Not implemented yet
+/** Get Answer
  * **/
-const validateParentheses = (state: State) => {
-    if (/[(]/.test(state.current) || /[)]/.test(state.current)) {
-        let countLeftParentheses = state.current.match(/[(]/g).length
-        let countRightParentheses = state.current.match(/[)]/g).length
-        if (countLeftParentheses !== countRightParentheses) {
-            return {
-                ...state,
-                overwrite: true,
-                current: 'Error: Parentheses do not match',
-            }
-        }
+const getAnswer = (state: State) => {
+    let expr = state.current.split(' ')
+    let answer = solve(expr)
+    if (isNaN(answer)) return {...state, answer: 0, addToHistory: `${state.current} = Error`, overwrite: true }
+
+    return {
+        ...state,
+        answer: answer,
+        current: '',
+        addToHistory: `${state.current} = ${answer}`,
+        overwrite: true,
     }
-    return true
 }
 
 /** Overwrite function -- used with every action **/
@@ -187,7 +189,7 @@ const isDigit = (value: string) => /^-?\d*\.{0,1}\d+$/.test(value)
 const lastIsDigit = (expr: string) => /^\d*\.?\d*$/.test(expr.slice(-1))
 const lastIsRightParentheses = (expr: string) => /[)]/.test(expr.slice(-1))
 const lastIsLeftParentheses = (expr: string) => /[(]/.test(expr.slice(-1))
-const lastIsOperator = (expr: string) => ['+','-','×','÷','^'].includes(expr.slice(-1)) || ['mod'].includes(expr.slice(-3))
+const lastIsOperator = (expr: string) => ['+','−','×','÷','^'].includes(expr.slice(-1)) || ['mod'].includes(expr.slice(-3))
 const lastIsAlpha = (expr: string) => /[a-z]/.test(expr.slice(-1))
 const lastIsAlphaOrOperator = (expr: string) => lastIsOperator(expr) || lastIsAlpha(expr) || lastIsLeftParentheses(expr)
 
