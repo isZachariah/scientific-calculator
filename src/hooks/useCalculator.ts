@@ -77,7 +77,7 @@ const reducer = (state: State, {type, payload}: Action) => {
             return state
 
         case 'negate':
-            if (state.overwrite) return overwrite('-', state)
+            if (state.overwrite) return state
             if (isDigit(state.current)) return negate(state.current, state)
             return state
 
