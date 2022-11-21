@@ -95,7 +95,6 @@ const reducer = (state: State, {type, payload}: Action) => {
                     return { ...state, current: `${answer}`, answer: `${answer}`,
                         addToHistory: `floor ${state.current} = ${answer}`}
                 }
-
             }
             return addValue(state.current, payload.value, state)
 
@@ -290,7 +289,6 @@ export const useCalculator = () => {
         return () => setDisplay(current)
     }, [current])
 
-    // setDisplay(current)
     return {
         dispatch,
         display,
