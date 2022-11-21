@@ -5,8 +5,6 @@ import '../extensions/string.extensions';
 
 type State = {
     overwrite: boolean
-    parentheses: boolean
-    cursor: number
     current: string
     answer: string
     addToHistory: string
@@ -85,6 +83,20 @@ const reducer = (state: State, {type, payload}: Action) => {
 
         case 'unary-function':
             if (state.overwrite) return overwrite(payload.value, state)
+            if (isDecimal(state.current) && payload.value === 'floor' ||
+                isDecimal(state.current) && payload.value === 'ceil') {
+                if (payload.value === 'ceil') {
+                    let answer = Math.ceil(parseFloat(state.current))
+                    return { ...state, current: `${answer}`, answer: `${answer}`,
+                        addToHistory: `ceil ${state.current} = ${answer}`}
+                }
+                if (payload.value === 'floor') {
+                    let answer = Math.floor(parseFloat(state.current))
+                    return { ...state, current: `${answer}`, answer: `${answer}`,
+                        addToHistory: `floor ${state.current} = ${answer}`}
+                }
+
+            }
             return addValue(state.current, payload.value, state)
 
         case 'constant':
@@ -171,6 +183,7 @@ const negate = (expr: string, state: State) => {
 }
 
 /** Helper Boolean Values **/
+const isDecimal = (value: string) => /^-?\d*\.\d+$/.test(value)
 const isDigit = (value: string) => /^-?\d*\.{0,1}\d+$/.test(value)
 const lastIsDigit = (expr: string) => /^\d*\.?\d*$/.test(expr.slice(-1))
 const lastIsRightParentheses = (expr: string) => /[)]/.test(expr.slice(-1))
