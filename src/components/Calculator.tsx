@@ -8,8 +8,6 @@ type CalcProps = {
     current: string
 }
 
-// MAKE THE WIDTH OF THE BOTTOM BUTTONS AND THE DISPLAY REACT THE SAME AS THE MIDDLE
-
 export const Calculator: FC<CalcProps> = ({dispatch, current}) => {
     const [inverse, setInverse] = useState(false)
     return (
@@ -85,9 +83,9 @@ const buttons = [
 
 const unaryFunctions = [
     { type: 'get-answer',     value: 'ans',   style: funcStyles },
-    { type: 'choose-operator', value: 'mod',  style: funcStyles  },
-    { type: 'unary-function', value: 'ln',   style: funcStyles   },
-    { type: 'unary-function', value: 'sqrt',  style: funcStyles  },
+    { type: 'choose-operator', value: 'mod',  style: funcStyles },
+    { type: 'unary-function', value: 'ln',   style: funcStyles  },
+    { type: 'unary-function', value: 'sqrt',  style: funcStyles },
     { type: 'unary-function', value: 'ceil',  style: funcStyles },
     { type: 'unary-function', value: 'floor', style: funcStyles },
 
@@ -95,32 +93,28 @@ const unaryFunctions = [
 ]
 
 const inverseUnaryFunctions = [
-    { type: 'unary-function', value: 'sin',   style: funcStyles   },
-    { type: 'unary-function', value: 'cos',   style: funcStyles   },
-    { type: 'unary-function', value: 'tan',   style: funcStyles   },
+    { type: 'unary-function', value: 'sin',   style: funcStyles },
+    { type: 'unary-function', value: 'cos',   style: funcStyles },
+    { type: 'unary-function', value: 'tan',   style: funcStyles },
     { type: 'unary-function', value: 'asin',  style: funcStyles },
     { type: 'unary-function', value: 'acos',  style: funcStyles },
     { type: 'unary-function', value: 'atan',  style: funcStyles },
-    { type: 'unary-function', value: 'log', style: funcStyles },
-
-
-
+    { type: 'unary-function', value: 'log',   style: funcStyles },
 ]
 
 const parens = [
-    { type: 'left-parens', value: '(', style: funcStyles },
+    { type: 'left-parens', value: '(',  style: funcStyles },
     { type: 'right-parens', value: ')', style: funcStyles },
 ]
 
 const constants = [
-    { type: 'constant', value: 'e',       style: constantStyles  },
-    { type: 'constant', value: 'π',      style: constantStyles  },
+    { type: 'constant', value: 'e',        style: constantStyles  },
+    { type: 'constant', value: 'π',        style: constantStyles  },
 
     { type: 'constant',   value: '0 ↔ 1',  style: constantStyles  },
-    { type: 'constant',   value: '1 ↔ 10',  style: constantStyles  },
-    { type: 'constant',   value: '1 ↔ 100',  style: constantStyles  },
+    { type: 'constant',   value: '1 ↔ 10', style: constantStyles  },
+    { type: 'constant',   value: '1 ↔ 100', style: constantStyles  },
 
 ]
 
-// { type: 'unary-function', value: 'round', style: funcStyles },
 

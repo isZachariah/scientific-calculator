@@ -7,15 +7,6 @@ type DisplayProps = {
 }
 
 export const Display: FC<DisplayProps> = ({dispatch, current}) => {
-    // let format = false;
-    // if (current.includes('.')) {
-    //     const [integer, decimal] = current.split('.')
-    //     if (decimal !== null) {
-    //         if (decimal.length > 10) {
-    //             format = true
-    //         }
-    //     }
-    // }
 
     return (
         <div className={'min-w-full max-w-sm border-black border border-2 dark:border-0 dark:border-b-2 p-3 flex flex-row h-24 bg-white dark:bg-[#00798c] align-middle rounded-t-xl'}>
@@ -31,7 +22,5 @@ export const Display: FC<DisplayProps> = ({dispatch, current}) => {
         </div>
     )
 }
-//dark:bg-[#00798c]
-// format ? parseFloat(current).toFixed(10).toString() :
-// const format = (current: string) => parseFloat(current).toFixed(10).toString()
+
 

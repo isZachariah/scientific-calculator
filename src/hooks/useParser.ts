@@ -27,17 +27,8 @@ const brackets = {
 /** operations and functions **/
 
 /** Generate functions receives a clojure/ function, a type, a precedence, and a boolean and returns an object including each */
-// const generateFunction = (eval, operation, type = types.function, precedence = 0, left_assoc = true) => {
-//     return {
-//         eval: eval,
-//         operation: operation,
-//         type: type,
-//         precedence: precedence,
-//         left_assoc: left_assoc
-//     };
-// };
 
-const generateFunction = (evaluate, operation, type = types.function, precedence = 0, left_assoc = true) => ({
+const generateFunction = (evaluate: Eval, operation: string, type = types.function, precedence = 0, left_assoc = true): opNode => ({
     evaluate,
     operation,
     type,
@@ -45,6 +36,15 @@ const generateFunction = (evaluate, operation, type = types.function, precedence
     left_assoc,
 });
 
+type Eval = ((x: number, y: number) => number) | ((x: number) => number)
+
+type opNode =  {
+    evaluate: ((x: number, y: number) => number) | ((x: number) => number)
+    operation: string
+    type: string
+    precedence: number
+    left_assoc: boolean
+}
 /** Unary Functions that take one parameter;
  * type = function; precedence = 0; associativity = left
  sin cos tan arcsin arccos arctan ln log sqrt abs round ceil
@@ -148,7 +148,7 @@ function association(element) {
  * @param {string} token
  * @return {boolean} true if token is a digit, a decimal, or a constant
  **/
-function isNumber(token) {
+function isNumber(token: string) {
     return /\d/.test(token) || token === '.' || token in constants;
 }
 
@@ -156,28 +156,16 @@ function isNumber(token) {
  * @param {string} token
  * @return {object} { type, value }
  **/
-function literalValue(token) {
+function literalValue(token: string) {
     return {
         type: types.literal,
         value: parseFloat(token)
     }
-    // if (typeof token === 'number') return {
-    //     type: types.literal,
-    //     value: token
-    // }
-    // else if (token in constants) return {
-    //     type: types.constant,
-    //     value: constants[token]
-    // }
-    // else return {
-    //         type: types.literal,
-    //         value: parseFloat(token)
-    //     }
 }
 
 
 // Parsing and Evaluation helpers
-const last = stack => stack[stack.length-1];
+const last = (stack: string[]) => stack[stack.length-1];
 
 /** parser
  * This function takes a prefix expression in the form of a string array  as an argument,
@@ -188,16 +176,10 @@ const last = stack => stack[stack.length-1];
  **/
 function parse(expression: string[]) {
     const queue = [];
-    const stack = [];
+    const stack: string[] = [];
 
     expression.forEach((token, index, array) => {
-        // if (isNumber(token)) {
-        //     let el = literalValue(token)
-        //     queue.push(el);
-        // }
-        if (/\d/.test(token)
-            || /^-\d+.\d+$/.test(token)
-            || /^\d+.\d+$/.test(token)) {
+        if (/^-?\d*\.{0,1}\d+$/.test(token)) {
             queue.push({type: types.literal, value: parseFloat(token)});
         }
         else if (token === 'random') {
@@ -209,9 +191,9 @@ function parse(expression: string[]) {
         else if (brackets.right.includes(token)) {
             while (last(stack) !== '(') {
                 queue.push(stack.pop());
-                if (stack.length <= 1 && stack[0] !== '(') {
-                    throw new Error('Mismatched Parentheses');
-                }
+                // if (stack.length <= 1 && stack[0] !== '(') {
+                //     throw new Error('Mismatched Parentheses');
+                // }
             }
             stack.pop();
         }
@@ -275,137 +257,9 @@ function evaluate(tokens: any[]) {
     return result;
 }
 
-export const solve = (expression: string) => {
+export const solve = (expression: string[]) => {
     let tokens = parse(Array.from(expression))
     return evaluate(tokens)
 }
-// export const useParser = (expr: string) => {
-//     let queue: Token[] = []
-//     parse(expr, queue) //queue
-//     return  resolve(queue) //queue
-// }
-//
-// const last = (stack: string[]) => stack[stack.length-1];
-//
-// export const parse = (expr: string, queue: object[] ) => { //
-//     const stack: string[] = []
-//     expr.split(' ').forEach((token) => {
-//         if (/\d/.test(token)
-//             // || /^-\d+.\d+$/.test(token)
-//             || /^\d+.\d+$/.test(token)) {
-//             queue.push({type: 'number', value: parseFloat(token)})
-//         }
-//         if (token === '(') stack.push('(')
-//         if (token === ')') {
-//             while (last(stack) !== '(') {
-//                 queue.push({type: 'operation', value: stack.pop()})
-//                 if (stack.length <= 1 && stack[0] !== '(') {
-//                     throw new Error(`useParser: Mismatched Parens`)
-//                 }
-//             }
-//             stack.pop()
-//         }
-//         if (token in OPERATORS) {
-//             if (stack.length !== 0) {
-//                 let curr = getProperty(OPERATORS, token)
-//                 let prev = getProperty(OPERATORS, last(stack))
-//                 while (greaterPrecedence(prev, curr) || equalPrecedence(prev, curr)) {
-//                     queue.push({ type: 'operation', value: stack.pop() })
-//                     if (stack.length === 0) break;
-//                 }
-//             }
-//             stack.push(token)
-//         }
-//     });
-//     while (stack.length !== 0) {
-//         if (last(stack) === '(' || last(stack) === ')') stack.pop()
-//         // let el = getProperty(OPERATORS, stack.pop())
-//         queue.push({ type: 'operation', value: stack.pop() })
-//     }
-// }
-//
-// const addToLocalStorage = (object: Token) => {
-//     let queue: Token[] = JSON.parse(localStorage.getItem('queue') as string)
-//     if (queue === null) queue = []
-//     queue.push(object)
-//     localStorage.setItem('queue', JSON.stringify(queue))
-// }
-//
-//
-// export type Token =
-//     { type: string;
-//         value: number | string
-//     }
-//
-// export const resolve = (tokens: Token[]) => {
-//     let result = 0
-//     let stack: number[] = []
-//     tokens.forEach((element) => {
-//         switch (element.type) {
-//             case 'number':
-//                 if (typeof element.value === 'number') stack.push(element.value);
-//                 break;
-//             case 'operation':
-//                 let b: number = stack.pop();
-//                 let a: number = stack.pop();
-//                 if (typeof element.value === "string") {
-//                     const operator = getProperty(OPERATORS, element.value)
-//                     result = operator.binaryFunction(a, b);
-//                 }
-//                 stack.push(result);
-//                 break;
-//         }
-//     });
-//     return result.toString();
-// }
-//
-// export function getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
-//     return o[propertyName]; // o[propertyName] is of type T[K]
-// }
-//
-//
-// function getPrecedence(element: opNode) {
-//     return element.precedence;
-// }
-//
-//
-// const greaterPrecedence = (on_stack: opNode, new_el: opNode) => {
-//     return getPrecedence(on_stack) > getPrecedence(new_el);
-// }
-//
-// const equalPrecedence = (on_stack: opNode, new_el: opNode) => {
-//     return getPrecedence(on_stack) === getPrecedence(new_el) && association(on_stack);
-// }
-//
-// function association(element: opNode) {
-//     return element.left
-// }
-//
-// type opNode =  {
-//     operation: string
-//     binaryFunction: ((x: number, y: number) => number)
-//     left: boolean
-//     precedence: number
-// }
-//
-// const generateOperator= (operation: string,
-//                          binaryFunction: ((x: number, y: number) => number),
-//                          left: boolean,
-//                          precedence: number,
-// ) => ({
-//     operation,
-//     binaryFunction,
-//     left,
-//     precedence
-// });
-//
-//
-// const OPERATORS = {
-//     '+': generateOperator('+', ((x, y) => x + y), true, 2),
-//     '−': generateOperator('−', ((x, y) => x - y), true, 2),
-//     '×': generateOperator('*', ((x, y) => x * y), true, 3),
-//     '÷': generateOperator('/', ((x, y) => x / y), true, 3),
-//     'mod': generateOperator('mod', ((x, y) => x % y), true, 3),
-//     '^': generateOperator('^', ((x, y) => Math.pow(y, x)), false, 1),
-// }
-//
+
+
