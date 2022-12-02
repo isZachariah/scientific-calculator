@@ -10,8 +10,8 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "tsc && vite build --outDir dist/client",
     "build:server": "tsc && vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "predeploy": "pnpm run build",
-    "deploy": "gh-pages -d dist",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist/client",
     "preview": "vite preview"
   },
   "dependencies": {

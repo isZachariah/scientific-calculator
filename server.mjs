@@ -71,41 +71,4 @@ bootstrap()
     .then(async ({ app }) => await listen(app, { port: process.env.PORT || 3011 }))
     .catch(console.error)
 
-
-
-
-
-// const app = express()
-//
-// app.use(helmet())
-//
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-//
-// app.use("/", express.static(path.join(__dirname, "dist"), {
-//     immutable: true,
-//     maxAge: '86400'
-// }));
-//
-// app.get("/*", async (_req, res) => {
-//     res.sendFile(path.join(__dirname, "dist", "index.html"));
-// })
-//
-// const port = process.env.PORT || 3011;
-//
-// const server = app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`)
-// })
-//
-// //graceful shutdown
-// process.on('SIGTERM', shutDown);
-// process.on('SIGINT',  shutDown);
-//
-// function shutDown() {
-//     server.close(() => {
-//         console.log(`Server is shutting down`);
-//         process.exit(0);
-//     })
-// }
-//    "build": "tsc && vite build",
 export {}
