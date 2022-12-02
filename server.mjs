@@ -32,7 +32,7 @@ const bootstrap = async () => {
 
     app.use(helmet())
 
-    app.use("/", express.static(path.join(__dirname, "dist")));
+    // app.use("/", express.static(path.join(__dirname, "dist")));
 
     app.get("*", async (req, res, next) => {
         const url = req.originalUrl

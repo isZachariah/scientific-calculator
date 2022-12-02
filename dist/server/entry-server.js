@@ -924,12 +924,13 @@ const Router = () => {
   return /* @__PURE__ */ jsxs(Routes, {
     children: [/* @__PURE__ */ jsx(Route, {
       index: true,
+      path: "/",
       element: /* @__PURE__ */ jsx(Home, {})
     }), /* @__PURE__ */ jsx(Route, {
       path: "/about",
       element: /* @__PURE__ */ jsx(About, {})
     }), /* @__PURE__ */ jsx(Route, {
-      path: "*",
+      path: "/*",
       element: /* @__PURE__ */ jsx(NotFound, {})
     })]
   });

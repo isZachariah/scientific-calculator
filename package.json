@@ -1,6 +1,6 @@
 {
   "name": "calculator--",
-  "homepage": "https://https://iszachariah.github.io/scientific-calculator/",
+  "homepage-ignore-for-server": "https://https://iszachariah.github.io/scientific-calculator/",
   "private": false,
   "version": "0.0.0",
   "type": "module",
