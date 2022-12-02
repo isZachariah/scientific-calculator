@@ -111,11 +111,9 @@ function parse(expression) {
   return queue;
 }
 function evaluate(tokens) {
-  console.log(tokens);
   let result = 0;
   let stack = [];
   tokens.forEach((element, index, array) => {
-    console.log(element);
     if (element === void 0)
       return;
     switch (element.type) {
@@ -137,7 +135,6 @@ function evaluate(tokens) {
         break;
     }
   });
-  console.log(result);
   return result;
 }
 const solve = (expression) => {
@@ -257,7 +254,6 @@ const reducer = (state, { type, payload }) => {
         return overwrite(payload.value, state);
       return addValue(state.current, payload.value, state, true);
     case "evaluate":
-      console.log(state);
       if (state.overwrite)
         return state;
       if (isDigit(state.current))
@@ -705,8 +701,6 @@ const Tape = ({
       className: "bg-[#f1fffa] dark:bg-[#00798c] flex flex-col h-fit rounded-xl mx-auto m-0 p-3 text-2xl text-black overflow-x-auto x-scroll",
       children: history.map((newCalculation, index) => {
         let [calculation, answer] = newCalculation.split(" = ");
-        console.log(calculation);
-        console.log(answer);
         return /* @__PURE__ */ jsxs("div", {
           className: "flex flex-col",
           children: [/* @__PURE__ */ jsxs("div", {

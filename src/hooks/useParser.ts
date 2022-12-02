@@ -238,7 +238,6 @@ function parse(expression: string[]) {
  * @return {number}
  **/
 function evaluate(tokens: any[]) {
-    console.log(tokens)
     let result = 0;
     let stack: number[] = [];
     tokens.forEach((element, index, array) => {
