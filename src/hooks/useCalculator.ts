@@ -229,15 +229,15 @@ const addValue = (expr: string, value: string, state: State, retrievedValue=fals
     }
     if (lastIsLeftParentheses(value)) {
         if (lastIsAlphaOrOperator(state.current.slice(-1))) {
-            return {...state, parentheses: true, current: `${state.current} (`}
+            return {...state, parentheses: true, current: `${state.current} ${value}`}
         }
         if (isDigit(state.current.slice(-1)) || lastIsRightParentheses(expr)) {
-            return {...state, parentheses: true, current: `${state.current} × (`,}
+            return {...state, parentheses: true, current: `${state.current} × ${value}`,}
         }
     }
     if (lastIsRightParentheses(value)) {
         if (lastIsAlphaOrOperator(expr)) return state
-        if (lastIsDigit(expr)) return {...state, current: `${state.current} )`, parentheses: false, }
+        if (lastIsDigit(expr)) return {...state, current: `${state.current} ${value}`, parentheses: false, }
     }
 }
 
@@ -273,6 +273,7 @@ const constants = {
 const initHistory: string[] = []
 
 export const useCalculator = () => {
+    // @ts-ignore
     const [{current, addToHistory}, dispatch] = useReducer<React.Reducer<State, Action>>(reducer, { current: '', answer: '0', addToHistory: null, overwrite: true })
     const [history, setHistory] = useState(initHistory)
     const [display, setDisplay] = useState('')

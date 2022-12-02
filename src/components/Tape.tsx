@@ -23,7 +23,7 @@ export const Tape = ({history, dispatch}: TapeProps) => {
                             <div key={index} className={'flex flex-col'}>
                                 <div
                                     className={'flex flex-row'}>
-                                    <p className={'flex hover:border-2 h-12 hover:border-[#93b7be] max-w-xs hover:rounded-xl px-2 cursor-pointer overflow-x-hidden overflow-x-scroll overflow-hidden whitespace-nowrap'}
+                                    <div className={'flex hover:border-2 h-12 hover:border-[#93b7be] max-w-xs hover:rounded-xl px-2 cursor-pointer overflow-x-hidden overflow-x-scroll overflow-hidden whitespace-nowrap'}
                                        onClick={() => {
                                            dispatch({
                                                type: 'retrieve-history',
@@ -31,9 +31,9 @@ export const Tape = ({history, dispatch}: TapeProps) => {
                                            })
                                        }}
 
-                                    >{calculation}</p>
+                                    >{calculation}</div>
                                     <p className={'gap-1 px-3'}>=</p>
-                                    <p  className={'hover:border-2 hover:border-[#93b7be] hover:rounded-xl px-2 cursor-pointer max-w-xs overflow-x-hidden overflow-x-scroll overflow-hidden whitespace-nowrap'}
+                                    <div  className={'hover:border-2 hover:border-[#93b7be] hover:rounded-xl px-2 cursor-pointer max-w-xs overflow-x-hidden overflow-x-scroll overflow-hidden whitespace-nowrap'}
                                         onClick={() => {
                                             dispatch({
                                                 type: 'retrieve-history',
@@ -41,7 +41,7 @@ export const Tape = ({history, dispatch}: TapeProps) => {
                                             })
                                         }}
 
-                                    >{answer}</p>
+                                    >{answer}</div>
                                 </div>
                                 <div className={'bg-black h-0 w-full'}/>
                             </div>

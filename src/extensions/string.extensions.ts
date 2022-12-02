@@ -2,7 +2,7 @@
 interface String {
     replaceAt(index: number, replacement: string): string
 }
-
+// @ts-ignore
 String.prototype.replaceAt = function (index: number, replacement: string) {
     if (index >= this.length) {
         return this.valueOf();

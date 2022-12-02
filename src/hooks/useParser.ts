@@ -1,4 +1,4 @@
-// @ts-ignore
+
 const constants = {
     pi: Math.PI,
     ln10: Math.LN10,
@@ -50,19 +50,19 @@ type opNode =  {
  sin cos tan arcsin arccos arctan ln log sqrt abs round ceil
  */
 const unary_functions = {
-    sin: generateFunction((x) => Math.sin(x), 'sin'),
-    cos: generateFunction((x) => Math.cos(x), 'cos'),
-    tan: generateFunction((x) => Math.tan(x), 'tan'),
-    asin: generateFunction((x) => Math.asin(x), 'asin'),
-    acos: generateFunction((x) => Math.acos(x), 'acos'),
-    atan: generateFunction((x) => Math.atan(x), 'atan'),
-    ln:  generateFunction((x) => Math.log(x), 'ln'),
-    log: generateFunction((x) => Math.log10(x), 'log'),
-    sqrt:generateFunction((x) => Math.sqrt(x), 'sqrt'),
-    abs: generateFunction((x) => Math.abs(x), 'abs'),
-    round: generateFunction((x) => Math.round(x), 'round'),
-    floor: generateFunction((x) => Math.floor(x), 'floor'),
-    ceil: generateFunction((x) => Math.ceil(x), 'ceil'),
+    sin:   generateFunction((x: number) => Math.sin(x), 'sin'),
+    cos:   generateFunction((x: number) => Math.cos(x), 'cos'),
+    tan:   generateFunction((x: number) => Math.tan(x), 'tan'),
+    asin:  generateFunction((x: number) => Math.asin(x), 'asin'),
+    acos:  generateFunction((x: number) => Math.acos(x), 'acos'),
+    atan:  generateFunction((x: number) => Math.atan(x), 'atan'),
+    ln:    generateFunction((x: number) => Math.log(x), 'ln'),
+    log:   generateFunction((x: number) => Math.log10(x), 'log'),
+    sqrt:  generateFunction((x: number) => Math.sqrt(x), 'sqrt'),
+    abs:   generateFunction((x: number) => Math.abs(x), 'abs'),
+    round: generateFunction((x: number) => Math.round(x), 'round'),
+    floor: generateFunction((x: number) => Math.floor(x), 'floor'),
+    ceil:  generateFunction((x: number) => Math.ceil(x), 'ceil'),
 };
 
 /** Binary functions take two parameters and vary in precedence and left association
@@ -82,13 +82,13 @@ const binary_functions = {
 // Function and Operation Helpers
 
 /** function not operation **/
-const functionNotOperation = (func) => func.type === types.function;
+const functionNotOperation = (func: opNode) => func.type === types.function;
 
 /** is an operation or function
  * @param {string} token
  * @return {boolean} true if token is an operation or a function
  **/
-function isOperationOrFunction(token) {
+function isOperationOrFunction(token: string) {
     return token in unary_functions || token in binary_functions;
 }
 
@@ -99,7 +99,7 @@ function isOperationOrFunction(token) {
  * @param {string} token
  * @returns {object}
  * */
-function findElement(token) {
+function findElement(token: string) {
     if (token in unary_functions) return unary_functions[token]
     if (token in binary_functions) return binary_functions[token]
 }
@@ -107,7 +107,7 @@ function findElement(token) {
 /** get precedence
  * returns the numerical precedence of an operation or function
  **/
-function getPrecedence(element) {
+function getPrecedence(element: opNode) {
     return element.precedence;
 }
 
@@ -118,7 +118,7 @@ function getPrecedence(element) {
  * @param new_el
  * @return {boolean}
  * **/
-const greaterPrecedence = (on_stack, new_el) => {
+const greaterPrecedence = (on_stack: opNode, new_el: opNode) => {
     return getPrecedence(on_stack) > getPrecedence(new_el);
 }
 
@@ -129,7 +129,7 @@ const greaterPrecedence = (on_stack, new_el) => {
  * @param new_el
  * @return {boolean}
  * **/
-const equalPrecedence = (on_stack, new_el) => {
+const equalPrecedence = (on_stack: opNode, new_el: opNode) => {
     return getPrecedence(on_stack) === getPrecedence(new_el) && association(on_stack);
 }
 
@@ -165,7 +165,12 @@ function literalValue(token: string) {
 
 
 // Parsing and Evaluation helpers
-const last = (stack: string[]) => stack[stack.length-1];
+const last = (stack: opNode[] | string) => stack[stack.length-1];
+
+type Element = {
+    type: string,
+    value: number | opNode
+}
 
 /** parser
  * This function takes a prefix expression in the form of a string array  as an argument,
@@ -189,6 +194,7 @@ function parse(expression: string[]) {
             stack.push('(');
         }
         else if (brackets.right.includes(token)) {
+            // @ts-ignore
             while (last(stack) !== '(') {
                 queue.push(stack.pop());
                 // if (stack.length <= 1 && stack[0] !== '(') {
@@ -202,8 +208,11 @@ function parse(expression: string[]) {
             if (element.type === types.function) stack.push(element);
             else {
                 if (stack.length !== 0) {
+                    // @ts-ignore
                     while (functionNotOperation(last(stack)) ||
+                    // @ts-ignore
                     greaterPrecedence(last(stack), element) ||
+                    // @ts-ignore
                     equalPrecedence(last(stack), element)) {
                         queue.push(stack.pop());
                         if (stack.length === 0) break;
@@ -215,6 +224,7 @@ function parse(expression: string[]) {
         // else throw Error('Token not recognized');
     });
     while (stack.length !== 0) {
+        // @ts-ignore
         if (last(stack) === '(' || last(stack) === ')') stack.pop();
         queue.push(stack.pop())
     }
