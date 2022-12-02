@@ -242,7 +242,6 @@ function evaluate(tokens: any[]) {
     let result = 0;
     let stack: number[] = [];
     tokens.forEach((element, index, array) => {
-        console.log(element)
         if (element === undefined) return;
         switch (element.type) {
             case types.constant:
@@ -263,7 +262,6 @@ function evaluate(tokens: any[]) {
                 break;
         }
     });
-    console.log(result)
     return result;
 }
 

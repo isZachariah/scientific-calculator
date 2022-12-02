@@ -17,8 +17,6 @@ export const Tape = ({history, dispatch}: TapeProps) => {
                 {
                     history.map((newCalculation: string, index: number ) => {
                         let [calculation, answer] = newCalculation.split(' = ')
-                        console.log(calculation)
-                        console.log(answer)
                         return (
                             <div key={index} className={'flex flex-col'}>
                                 <div

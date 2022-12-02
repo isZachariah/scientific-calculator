@@ -4,7 +4,7 @@ import { Home } from "./pages/Home";
 import { About } from "./pages/About";
 import { NotFound } from "./pages/NotFound";
 
-
+// Use for SSR
 export const Router = () => {
     return (
         <Routes>
@@ -14,3 +14,16 @@ export const Router = () => {
         </Routes>
     );
 };
+
+// Use for gh-pages
+/**
+export const Router = () => {
+    return (
+        <Routes>
+            <Route index path="/scientific-calculator/" element={<Home />} />
+            <Route path="/scientific-calculator/about" element={<About />} />
+            <Route path="/scientific-calculator/*" element={<NotFound />} />
+        </Routes>
+    );
+};
+**/

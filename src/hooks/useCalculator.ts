@@ -112,12 +112,11 @@ const reducer = (state: State, {type, payload}: Action) => {
             return addValue(state.current, payload.value, state, true)
 
         case 'evaluate':
-            console.log(state)
             if (state.overwrite) return state
             if (isDigit(state.current)) return { ...state, overwrite: true, current: '', addToHistory: `${state.current} = ${state.current}`}
             if (!/\d/.test(state.current)) return {...state, overwrite: true, addToHistory: `${state.current} = Error`, current: 'Error: No digits in expression', }
 
-            // More often than not the program will still run with unbalanced parentheses but I felt like this was a good addition to avoid possible errors
+            // More often than not the program will still run with unbalanced parentheses, but I felt like this was a good addition to avoid possible errors
             if (/[(]/.test(state.current) || /[)]/.test(state.current)) {
                 let countLeftParentheses = state.current.split('(').length - 1
                 let countRightParentheses = state.current.split(')').length - 1
