@@ -141,12 +141,6 @@ const solve = (expression) => {
   let tokens = parse(Array.from(expression));
   return evaluate(tokens);
 };
-String.prototype.replaceAt = function(index, replacement) {
-  if (index >= this.length) {
-    return this.valueOf();
-  }
-  return this.substring(0, index) + replacement + this.substring(index + 1);
-};
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case "add-digit":
